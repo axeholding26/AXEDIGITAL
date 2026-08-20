@@ -4,7 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AppImage from '../image/AppImage';
 import { openWhatsApp, WHATSAPP_MESSAGES } from '../utils/whatsapp';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  currentPath?: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentPath }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -18,10 +22,40 @@ const Navbar: React.FC = () => {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    
+    if (href === '#axe-stacks') {
+      window.location.hash = href;
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    if (window.location.hash === '#axe-stacks') {
+      // Navigate back to the home page first
+      window.location.hash = href === '#' ? '' : href;
+      // Delay scrolling to allow DOM to render the home page sections
+      setTimeout(() => {
+        const targetId = href.replace('#', '');
+        if (targetId) {
+          const element = document.getElementById(targetId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
+      return;
+    }
+
     const targetId = href.replace('#', '');
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (targetId) {
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      window.location.hash = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -32,6 +66,7 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Nos réalisations', href: '#nos-realisations' },
     { name: 'Nos solutions', href: '#solutions-ia' },
+    { name: 'Axe Stacks', href: '#axe-stacks' },
     { name: 'Nos formules', href: '#nos-formules' },
     { name: 'Ils nous font confiance', href: '#ils-nous-font-confiance' },
     { name: 'Nous contacter', href: '#nous-contacter' },
@@ -50,9 +85,10 @@ const Navbar: React.FC = () => {
       >
         {/* Logo */}
         <a 
-          href="#hero" 
+          href="#" 
           onClick={(e) => {
             e.preventDefault();
+            window.location.hash = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center gap-2 cursor-pointer"

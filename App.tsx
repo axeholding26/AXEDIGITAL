@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Preloader from './src/components/Preloader';
 import CursorGlow from './src/components/CursorGlow';
 import Navbar from './src/components/Navbar';
@@ -13,26 +13,41 @@ import SolutionSection from './src/components/SolutionSection';
 import TestimonialSection from './src/components/TestimonialSection';
 import CTASection from './src/components/CTASection';
 import Footer from './src/components/Footer';
+import AxeStacks from './src/components/AxeStacks';
 
 const App: React.FC = () => {
-return (
+  const [currentPath, setCurrentPath] = useState(window.location.hash || '');
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setCurrentPath(window.location.hash);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  return (
     <>
       <Preloader />
       <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
       <CursorGlow />
-      <Navbar />
-      <main>
-        <Hero />
-        <Stats />
-        <Portfolio />
-        <ProblemSection />
-        <SolutionsSection />
-        <PricingSection />
-        <WhySection />
-        <SolutionSection />
-        <TestimonialSection />
-        <CTASection />
-      </main>
+      <Navbar currentPath={currentPath} />
+      {currentPath === '#axe-stacks' ? (
+        <AxeStacks />
+      ) : (
+        <main>
+          <Hero />
+          <Stats />
+          <Portfolio />
+          <ProblemSection />
+          <SolutionsSection />
+          <PricingSection />
+          <WhySection />
+          <SolutionSection />
+          <TestimonialSection />
+          <CTASection />
+        </main>
+      )}
       <Footer />
       </div>
     </>
