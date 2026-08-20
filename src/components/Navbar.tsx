@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPath }) => {
   const navLinks = [
     { name: 'Nos réalisations', href: '#nos-realisations' },
     { name: 'Nos solutions', href: '#solutions-ia' },
-    { name: 'Axe Stacks', href: '#axe-stacks' },
+    { name: 'Axe Stack', href: '#axe-stacks' },
     { name: 'Nos formules', href: '#nos-formules' },
     { name: 'Ils nous font confiance', href: '#ils-nous-font-confiance' },
     { name: 'Nous contacter', href: '#nous-contacter' },
